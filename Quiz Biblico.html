@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Bíblico</title>
+    <link rel="icon" type="image/png" href="./logo/light-bulb.png">
+    <!-- Carga de Tailwind CSS para la estética de la web -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Definición de la paleta de colores basada en tu imagen */
+        :root {
+            --color-primary: #8b0000; /* Rojo Oscuro */
+            --color-secondary: #800080; /* Morado, fondo */
+            --color-card: #ffffff;
+            --color-text: #333333;
+            --color-shadow: rgba(0, 0, 0, 0.15);
+        }
+
+        /* Estilos base del cuerpo para imitar el fondo */
+        body {
+            background-color: var(--color-secondary);
+            font-family: "Inter", sans-serif;
+            transition: background-color 0.3s;
+        }
+
+        /* Barra de navegación superior (Roja) */
+        .header-bar {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 6px var(--color-shadow);
+        }
+
+        /* Animación para el título */
+        .header-bar h1 {
+            animation: appear 2s ease-out;
+            font-family: 'Georgia', serif; /* Fuente más profesional */
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* Sombra para profundidad */
+            transition: transform 0.1s ease-out; /* Suave transición para el movimiento en scroll */
+            background: linear-gradient(45deg, #ffffff, #f0f0f0); /* Gradiente sutil para más profesionalidad */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Contenedor principal de la página (Blanco) */
+        .page-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: var(--color-card);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px var(--color-shadow);
+        }
+
+        /* Estilos responsivos */
+        @media (max-width: 768px) {
+            .page-container {
+                margin: 20px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barra Superior con la estética de tu página -->
+    <header class="header-bar text-center">
+        <div class="max-w-4xl mx-auto py-2 flex items-center justify-center gap-4">
+            <img src="./logo/Gemini_Generated_Image_ro40zpro40zpro40.png" alt="Logo" class="h-12 w-12 object-contain">
+            <h1 class="text-3xl font-bold tracking-wider">QUIZ BÍBLICO</h1>
+        </div>
+    </header>
+
+    <!-- Contenedor Principal -->
+    <div class="page-container">
+
+        <!-- BOTÓN PARA VOLVER -->
+        <div class="text-center mb-6">
+            <button id="back-button" class="bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-6 rounded-lg shadow-md transition duration-200">Volver a la Biblia</button>
+        </div>
+
+        <!-- SECCIÓN DEL QUIZ -->
+        <div id="quiz-section" class="p-6 border rounded-lg shadow-sm bg-gray-50">
+            <h3 class="text-xl font-bold text-center mb-4">Quiz Bíblico</h3>
+            <div id="score-display" class="text-center mb-4 text-lg font-semibold">Puntuación: 0/10</div>
+            <div id="question-text" class="text-lg mb-4 text-center"></div>
+            <div id="options-container" class="grid grid-cols-1 gap-2 mb-4"></div>
+            <div id="feedback-message" class="text-center mb-4 hidden"></div>
+            <div class="text-center">
+                <button id="next-button" class="bg-gray-400 text-white font-bold py-2 px-6 rounded-lg shadow-md transition duration-200" disabled>Siguiente Pregunta</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- FUNCIONALIDAD DEL QUIZ ---
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let questions = [];
+
+        // --- EFECTO DE MOVIMIENTO DEL TÍTULO AL HACER SCROLL ---
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const rate = -scrolled * 0.2; // Ajusta la velocidad del movimiento hacia arriba
+            document.querySelector('.header-bar h1').style.transform = `translateY(${rate}px)`;
+        });
+
+        // Preguntas del quiz (ejemplos simples)
+        const quizQuestions = [
+            {
+                question: "¿Quién creó los cielos y la tierra?",
+                options: ["Moisés", "Jesús", "Dios", "Abraham"],
+                correct: 2
+            },
+            {
+                question: "¿Cuál es el primer libro de la Biblia?",
+                options: ["Éxodo", "Génesis", "Levítico", "Números"],
+                correct: 1
+            },
+            {
+                question: "¿Cuántos discípulos tenía Jesús?",
+                options: ["10", "12", "14", "16"],
+                correct: 1
+            },
+            {
+                question: "¿Qué libro de la Biblia habla de la creación?",
+                options: ["Apocalipsis", "Génesis", "Salmos", "Proverbios"],
+                correct: 1
+            },
+            {
+                question: "¿Quién fue el primer rey de Israel?",
+                options: ["David", "Saúl", "Salomón", "Samuel"],
+                correct: 1
+            },
+            {
+                question: "¿En qué libro se encuentra el Salmo 23?",
+                options: ["Proverbios", "Eclesiastés", "Salmos", "Cantares"],
+                correct: 2
+            },
+            {
+                question: "¿Qué significa 'Jesús'?",
+                options: ["Salvador", "Rey", "Profeta", "Sacerdote"],
+                correct: 0
+            },
+            {
+                question: "¿Cuántos libros tiene el Nuevo Testamento?",
+                options: ["27", "39", "66", "50"],
+                correct: 0
+            },
+            {
+                question: "¿Quién bautizó a Jesús?",
+                options: ["Pedro", "Juan", "Juan el Bautista", "Mateo"],
+                correct: 2
+            },
+            {
+                question: "¿Cuál es el último libro de la Biblia?",
+                options: ["Apocalipsis", "Judas", "Hebreos", "3 Juan"],
+                correct: 0
+            }
+        ];
+
+        // Elementos del DOM
+        const quizSection = document.getElementById('quiz-section');
+        const scoreDisplay = document.getElementById('score-display');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackMessage = document.getElementById('feedback-message');
+        const nextButton = document.getElementById('next-button');
+        const backButton = document.getElementById('back-button');
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function startQuiz() {
+            questions = shuffleArray([...quizQuestions]);
+            currentQuestionIndex = 0;
+            score = 0;
+            scoreDisplay.textContent = `Puntuación: ${score}/10`;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const question = questions[currentQuestionIndex];
+            questionText.textContent = question.question;
+            optionsContainer.innerHTML = '';
+            feedbackMessage.classList.add('hidden');
+            nextButton.disabled = true;
+
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.className = 'bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-200';
+                button.addEventListener('click', () => selectOption(index));
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function selectOption(selectedIndex) {
+            const question = questions[currentQuestionIndex];
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach(button => button.disabled = true);
+
+            if (selectedIndex === question.correct) {
+                score++;
+                feedbackMessage.textContent = '¡Correcto!';
+                feedbackMessage.className = 'text-green-600 font-bold';
+            } else {
+                feedbackMessage.textContent = `Incorrecto. La respuesta correcta es: ${question.options[question.correct]}`;
+                feedbackMessage.className = 'text-red-600 font-bold';
+            }
+
+            feedbackMessage.classList.remove('hidden');
+            scoreDisplay.textContent = `Puntuación: ${score}/10`;
+            nextButton.disabled = false;
+        }
+
+        nextButton.addEventListener('click', () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                endQuiz();
+            }
+        });
+
+        function endQuiz() {
+            questionText.textContent = `¡Quiz completado! Tu puntuación final es: ${score}/10`;
+            optionsContainer.innerHTML = '';
+            feedbackMessage.classList.add('hidden');
+            nextButton.textContent = 'Reiniciar Quiz';
+            nextButton.disabled = false;
+            nextButton.addEventListener('click', () => {
+                startQuiz();
+            }, { once: true });
+        }
+
+        backButton.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+
+        // Iniciar el quiz al cargar la página
+        window.onload = startQuiz;
+
+    </script>
+</body>
+</html>

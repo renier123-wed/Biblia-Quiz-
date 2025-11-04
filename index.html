@@ -1,0 +1,470 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblia Quiz</title>
+    <link rel="icon" type="image/png" href="./logo/light-bulb.png">
+    <!-- Carga de Tailwind CSS para la estética de la web -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Definición de la paleta de colores basada en tu imagen */
+        :root {
+            --color-primary: #8b0000; /* Rojo Oscuro */
+            --color-secondary: #800080; /* Morado, fondo */
+            --color-card: #ffffff;
+            --color-text: #333333;
+            --color-shadow: rgba(0, 0, 0, 0.15);
+        }
+
+        /* Estilos base del cuerpo para imitar el fondo */
+        body {
+            background-color: var(--color-secondary);
+            font-family: "Inter", sans-serif;
+            transition: background-color 0.3s;
+        }
+
+        /* Barra de navegación superior (Roja) */
+        .header-bar {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 6px var(--color-shadow);
+        }
+
+        /* Animación para el título */
+        .header-bar h1 {
+            animation: appear 2s ease-out;
+            font-family: 'Georgia', serif; /* Fuente más profesional */
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* Sombra para profundidad */
+            transition: transform 0.1s ease-out; /* Suave transición para el movimiento en scroll */
+            background: linear-gradient(45deg, #ffffff, #f0f0f0); /* Gradiente sutil para más profesionalidad */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        /* Contenedor principal de la página (Blanco) */
+        .page-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            background-color: var(--color-card);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px var(--color-shadow);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        /* Columna de Selectores y Contenido de Biblia */
+        .content-column {
+            flex: 2;
+            min-width: 300px; /* Asegura que no se colapse en móvil */
+        }
+        
+        /* Contenido de la Biblia (donde se ve el texto) */
+        .bible-text {
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            line-height: 1.8;
+            height: 400px; /* Altura fija para demostración */
+            overflow-y: auto;
+        }
+
+        /* Columna lateral (para imitar el diseño de la imagen) */
+        .sidebar-column {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .sidebar-box {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        /* Estilos responsivos */
+        @media (max-width: 768px) {
+            .page-container {
+                flex-direction: column;
+                margin: 20px;
+                padding: 20px;
+            }
+            .content-column, .sidebar-column {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+    <!-- Barra Superior con la estética de tu página -->
+    <header class="header-bar text-center">
+        <div class="max-w-4xl mx-auto py-2 flex items-center justify-center gap-4">
+            <img src="./logo/Gemini_Generated_Image_ro40zpro40zpro40.png" alt="Logo" class="h-12 w-12 object-contain">
+            <h1 class="text-3xl font-bold tracking-wider">BIBLIA QUIZ</h1>
+        </div>
+    </header>
+
+    <!-- Contenedor Principal (Simulando el área de contenido) -->
+    <div class="page-container">
+
+        <!-- COLUMNA IZQUIERDA: Selectores y Contenido de la Biblia -->
+        <div class="content-column">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">Reina Valera 1960</h2>
+            
+            <!-- CONTROLES DE NAVEGACIÓN (Simulando la interfaz de selección) -->
+            <div class="flex flex-wrap gap-4 mb-6 p-4 border rounded-lg shadow-sm">
+                <div class="flex-1 min-w-[150px]">
+                    <label for="book-selector" class="block text-sm font-medium text-gray-700 mb-1">Libros de la Biblia</label>
+                    <select id="book-selector" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-700 focus:border-red-700">
+                        <!-- Las opciones se inyectarán por JS -->
+                    </select>
+                </div>
+                <div class="flex-1 min-w-[150px]">
+                    <label for="chapter-selector" class="block text-sm font-medium text-gray-700 mb-1">Capítulos</label>
+                    <select id="chapter-selector" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-700 focus:border-red-700">
+                        <option value="">Selecciona Capítulo</option>
+                    </select>
+                </div>
+                <button id="load-button" class="mt-auto bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-6 rounded-lg shadow-md transition duration-200">BUSCAR</button>
+            </div>
+
+            <!-- CONTENIDO DE LA BIBLIA (AQUÍ APARECE EL TEXTO) -->
+            <div class="bible-text mb-8" id="bible-content">
+                <p class="text-gray-500 text-center mt-20">
+                    Selecciona un libro y un capítulo para comenzar la lectura.
+                </p>
+            </div>
+
+            <!-- BOTONES PARA EL QUIZ (OCULTOS INICIALMENTE) -->
+            <div id="quiz-buttons" class="text-center mt-6 hidden">
+                <p class="mb-4 text-lg font-semibold">¿Quieres hacer el quiz bíblico?</p>
+                <div class="flex justify-center gap-4">
+                    <button id="quiz-yes-button" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transition duration-200">SI</button>
+                    <button id="quiz-no-button" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transition duration-200">NO</button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- COLUMNA DERECHA: Elemento Decorativo (similar a tu imagen) -->
+        <div class="sidebar-column">
+            <div class="sidebar-box mt-10">
+                <img id="verse-image" class="w-full object-contain rounded mb-4" alt="Imagen del versículo">
+                <p id="verse-text" class="text-center text-sm italic text-gray-600">
+                    "Lámpara es a mis pies tu palabra, y lumbrera a mi camino." (Salmo 119:105)
+                </p>
+            </div>
+            <div class="text-center mt-6">
+                <button id="share-button" class="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-6 rounded-lg shadow-md transition duration-200">COMPARTIR</button>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <script>
+        // --- 1. DATOS DE LA BIBLIA (SIMULACIÓN) ---
+        // Estructura: Código_de_libro: [Título, Capítulos]
+        const bibleData = {
+            // --- Antiguo Testamento (39 Libros) ---
+            "GEN": ["Génesis", 50],
+            "EXO": ["Éxodo", 40],
+            "LEV": ["Levítico", 27],
+            "NUM": ["Números", 36],
+            "DEU": ["Deuteronomio", 34],
+            "JOS": ["Josué", 24],
+            "JUE": ["Jueces", 21],
+            "RUT": ["Rut", 4],
+            "1SA": ["1 Samuel", 31],
+            "2SA": ["2 Samuel", 24],
+            "1KI": ["1 Reyes", 22],
+            "2KI": ["2 Reyes", 25],
+            "1CH": ["1 Crónicas", 29],
+            "2CH": ["2 Crónicas", 36],
+            "EZR": ["Esdras", 10],
+            "NEH": ["Nehemías", 13],
+            "EST": ["Ester", 10],
+            "JOB": ["Job", 42],
+            "PSA": ["Salmos", 150],
+            "PRO": ["Proverbios", 31],
+            "ECC": ["Eclesiastés", 12],
+            "SNG": ["Cantares", 8],
+            "ISA": ["Isaías", 66],
+            "JER": ["Jeremías", 52],
+            "LAM": ["Lamentaciones", 5],
+            "EZK": ["Ezequiel", 48],
+            "DAN": ["Daniel", 12],
+            "HOS": ["Oseas", 14],
+            "JOL": ["Joel", 3],
+            "AMO": ["Amós", 9],
+            "OBA": ["Abdías", 1],
+            "JON": ["Jonás", 4],
+            "MIC": ["Miqueas", 7],
+            "NAH": ["Nahúm", 3],
+            "HAB": ["Habacuc", 3],
+            "ZEP": ["Sofonías", 3],
+            "HAG": ["Hageo", 2],
+            "ZEC": ["Zacarías", 14],
+            "MAL": ["Malaquías", 4],
+
+            // --- Nuevo Testamento (27 Libros) ---
+            "MAT": ["Mateo", 28],
+            "MRK": ["Marcos", 16],
+            "LUK": ["Lucas", 24],
+            "JHN": ["Juan", 21],
+            "ACT": ["Hechos", 28],
+            "ROM": ["Romanos", 16],
+            "1CO": ["1 Corintios", 16],
+            "2CO": ["2 Corintios", 13],
+            "GAL": ["Gálatas", 6],
+            "EPH": ["Efesios", 6],
+            "PHP": ["Filipenses", 4],
+            "COL": ["Colosenses", 4],
+            "1TH": ["1 Tesalonicenses", 5],
+            "2TH": ["2 Tesalonicenses", 3],
+            "1TI": ["1 Timoteo", 6],
+            "2TI": ["2 Timoteo", 4],
+            "TIT": ["Tito", 3],
+            "PHM": ["Filemón", 1],
+            "HEB": ["Hebreos", 13],
+            "JAS": ["Santiago", 5],
+            "1PE": ["1 Pedro", 5],
+            "2PE": ["2 Pedro", 3],
+            "1JN": ["1 Juan", 5],
+            "2JN": ["2 Juan", 1],
+            "3JN": ["3 Juan", 1],
+            "JDE": ["Judas", 1],
+            "REV": ["Apocalipsis", 22]
+        };
+
+
+
+        // Mapeo de códigos de libro a nombres de archivo en la carpeta 'procesados'
+        // Esto es CRUCIAL para conectar el selector con tus archivos .js
+        const bookFileMap = {
+            "GEN": "genesis", "EXO": "exodo", "LEV": "levitico", "NUM": "numeros", "DEU": "deuteronomio",
+            "JOS": "josue", "JUE": "jueces", "RUT": "rut", "1SA": "1_samuel", "2SA": "2_samuel",
+            "1KI": "1_reyes", "2KI": "2_reyes", "1CH": "1_cronicas", "2CH": "2_cronicas", "EZR": "esdras",
+            "NEH": "nehemias", "EST": "ester", "JOB": "job", "PSA": "salmos", "PRO": "proverbios",
+            "ECC": "eclesiastes", "SNG": "cantares", "ISA": "isaias", "JER": "jeremias", "LAM": "lamentaciones",
+            "EZK": "ezequiel", "DAN": "daniel", "HOS": "oseas", "JOL": "joel", "AMO": "amos",
+            "OBA": "abdias", "JON": "jonas", "MIC": "miqueas", "NAH": "nahum", "HAB": "habacuc",
+            "ZEP": "sofonias", "HAG": "hageo", "ZEC": "zacarias", "MAL": "malaquias", "MAT": "mateo",
+            "MRK": "marcos", "LUK": "lucas", "JHN": "juan", "ACT": "hechos", "ROM": "romanos",
+            "1CO": "1_corintios", "2CO": "2_corintios", "GAL": "galatas", "EPH": "efesios", "PHP": "filipenses",
+            "COL": "colosenses", "1TH": "1_tesalonicenses", "2TH": "2_tesalonicenses", "1TI": "1_timoteo",
+            "2TI": "2_timoteo", "TIT": "tito", "PHM": "filemon", "HEB": "hebreos", "JAS": "santiago",
+            "1PE": "1_pedro", "2PE": "2_pedro", "1JN": "1_juan", "2JN": "2_juan", "3JN": "3_juan",
+            "JDE": "judas", "REV": "apocalipsis"
+        };
+
+        // Función para generar texto de versículos simulados
+        function generateBibleText(bookCode, chapter) {
+            const bookName = bibleData[bookCode][0];
+            let text = `<h3 class="text-xl font-bold text-red-700 mb-4">${bookName}, Capítulo ${chapter}</h3>`;
+            // Genera una cantidad variable de versículos simulados
+            const numVerses = Math.floor(Math.random() * 20) + 15;
+            
+            for (let v = 1; v <= numVerses; v++) {
+                text += `<p class="mb-3 text-sm"><span class="font-bold text-red-600 mr-2">${v}.</span>Este es el versículo ${v} de ${bookName} capítulo ${chapter}. El texto de la Reina Valera 1960 aparecería aquí tras ser cargado de la base de datos.</p>`;
+            }
+            return text;
+        }
+
+        // Función para mostrar el texto real de la Biblia desde el módulo JS cargado
+        function displayRealBibleText(bookCode, chapter, bookData) {
+            const bookName = bibleData[bookCode][0];
+            let text = `<h3 class="text-xl font-bold text-red-700 mb-4">${bookName}, Capítulo ${chapter}</h3>`;
+
+            // Los capítulos en tus archivos .js son arrays, y el índice es capítulo - 1
+            const chapterIndex = chapter - 1;
+            if (bookData && bookData[chapterIndex]) {
+                bookData[chapterIndex].forEach((verseText, verseIndex) => {
+                    const verseNumber = verseIndex + 1;
+                    text += `<p class="mb-3 text-sm"><span class="font-bold text-red-600 mr-2">${verseNumber}.</span>${verseText}</p>`;
+                });
+            } else {
+                text += `<p class="text-gray-500">No se encontró el texto para este capítulo. Revisa la consola para más detalles.</p>`;
+            }
+            return text;
+        }
+
+        // --- 2. ELEMENTOS DEL DOM ---
+        const bookSelector = document.getElementById('book-selector');
+        const chapterSelector = document.getElementById('chapter-selector');
+        const loadButton = document.getElementById('load-button');
+        const bibleContent = document.getElementById('bible-content');
+        const quizButtons = document.getElementById('quiz-buttons');
+        const quizYesButton = document.getElementById('quiz-yes-button');
+        const quizNoButton = document.getElementById('quiz-no-button');
+
+        // --- 5. FUNCIONES DE NAVEGACIÓN DE LA BIBLIA ---
+
+        /**
+         * Inicializa los selectores con los libros de la biblia.
+         */
+        function initializeSelectors() {
+            bookSelector.innerHTML = '<option value="">Selecciona Libro</option>';
+            // Obtener las claves y ordenar por el número de capítulos (simulando orden canónico)
+            const sortedBooks = Object.keys(bibleData).sort((a, b) => {
+                // Una simple ordenación alfabética es suficiente para la demostración
+                return a.localeCompare(b); 
+            });
+
+            // Re-ordenar manualmente los libros canónicos ya que la clave no siempre es el orden correcto
+            // Se utiliza el orden de las claves en el objeto bibleData, ya que se introdujo en el orden canónico
+            for (const code in bibleData) {
+                const [name, chapters] = bibleData[code];
+                const option = document.createElement('option');
+                option.value = code;
+                option.textContent = name;
+                bookSelector.appendChild(option);
+            }
+        }
+
+        /**
+         * Carga el contenido de la biblia.
+         */
+        loadButton.addEventListener('click', async () => {
+            const bookCode = bookSelector.value;
+            const chapter = chapterSelector.value;
+
+            if (!bookCode || !chapter) {
+                bibleContent.innerHTML = `<p class="text-red-600 text-center mt-20">Por favor, selecciona un Libro y un Capítulo válidos.</p>`;
+                return;
+            }
+
+            // Ocultar los botones del quiz inicialmente
+            quizButtons.classList.add('hidden');
+
+            const fileName = bookFileMap[bookCode];
+            if (!fileName) {
+                bibleContent.innerHTML = `<p class="text-red-600 text-center mt-20">Error: No se encontró el archivo para el libro seleccionado.</p>`;
+                return;
+            }
+
+            try {
+                // Importación dinámica del módulo del libro correspondiente
+                const module = await import(`./procesados/${fileName}.js`);
+                const bookData = module.default; // El contenido es la exportación por defecto
+
+                bibleContent.innerHTML = displayRealBibleText(bookCode, chapter, bookData);
+                bibleContent.scrollTop = 0;
+
+                // Agregar listener para mostrar botones al llegar al final del scroll
+                bibleContent.addEventListener('scroll', () => {
+                    if (bibleContent.scrollTop + bibleContent.clientHeight >= bibleContent.scrollHeight - 10) {
+                        quizButtons.classList.remove('hidden');
+                    }
+                });
+            } catch (error) {
+                console.error(`Error al cargar el libro ${fileName}.js:`, error);
+                bibleContent.innerHTML = `<p class="text-red-600 text-center mt-20">No se pudo cargar el texto del libro. Asegúrate de que el archivo <strong>/procesados/${fileName}.js</strong> exista y sea accesible.</p>`;
+            }
+        });
+
+
+
+
+
+        // --- 7. EVENT LISTENERS Y ARRANQUE ---
+
+        /**
+         * Actualiza el selector de capítulos basándose en el libro seleccionado.
+         */
+        bookSelector.addEventListener('change', () => {
+            const selectedBookCode = bookSelector.value;
+            chapterSelector.innerHTML = '<option value="">Selecciona Capítulo</option>';
+
+            if (selectedBookCode && bibleData[selectedBookCode]) {
+                const [, totalChapters] = bibleData[selectedBookCode];
+                for (let i = 1; i <= totalChapters; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.textContent = `Capítulo ${i}`;
+                    chapterSelector.appendChild(option);
+                }
+            }
+        });
+
+        window.onload = initializeSelectors; // Inicializa los selectores al cargar la página
+
+        // --- 8. FUNCIONALIDAD DE COMPARTIR ---
+        const shareButton = document.getElementById('share-button');
+        shareButton.addEventListener('click', () => {
+            const url = window.location.href;
+            const message = `Mira esta página de Biblia Interactiva: ${url}`;
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        });
+
+        // --- 9. ROTACIÓN DE VERSÍCULOS ---
+        const verses = [
+            { text: "Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree, no se pierda, mas tenga vida eterna.", reference: "Juan 3:16", image: "Juan 3_16 by litho.jpeg" },
+            { text: "Jesús le dijo: Amarás al Señor tu Dios con todo tu corazón, y con toda tu alma, y con toda tu mente. Este es el primero y grande mandamiento. Y el segundo es semejante: Amarás a tu prójimo como a ti mismo.", reference: "Mateo 22:37-39", image: "Mateo.jpeg" },
+            { text: "En el principio creó Dios los cielos y la tierra.", reference: "Génesis 1:1", image: "Génesis.jpeg" },
+            { text: "por cuanto todos pecaron, y están destituidos de la gloria de Dios,", reference: "Romanos 3:23", image: "Romanos.jpeg" },
+            { text: "Todo lo puedo en Cristo que me fortalece.", reference: "Filipenses 4:13", image: "Filipenses.jpeg" },
+            { text: "No temas, porque yo estoy contigo; no desmayes, porque yo soy tu Dios que te esfuerzo; siempre te ayudaré, siempre te sustentaré con la diestra de mi justicia.", reference: "Isaías 41:10", image: "Isaías.jpeg" },
+            { text: "Jehová es mi pastor; nada me faltará.", reference: "Salmo 23:1", image: "Salmo.jpeg" },
+            { text: "Porque yo sé los pensamientos que tengo acerca de vosotros, dice Jehová, pensamientos de paz, y no de mal, para daros el fin que esperáis.", reference: "Jeremías 29:11", image: "Jeremías.jpeg" },
+            { text: "pero recibiréis poder, cuando haya venido sobre vosotros el Espíritu Santo, y me seréis testigos en Jerusalén, en toda Judea, en Samaria, y hasta lo último de la tierra.", reference: "Hechos 1:8", image: "Hechos.jpeg" },
+            { text: "El que da testimonio de estas cosas, dice: Ciertamente vengo en breve. Amén; sí, ven, Señor Jesús.", reference: "Apocalipsis 22:20", image: "Apocalipsis.jpeg" },
+            { text:"Lámpara es a mis pies tu palabra, y lumbrera a mi camino", reference: "Salmo 119:105", image: "Salmo 119.jpg" }
+        ];
+
+        let currentVerseIndex = 0;
+        const verseElement = document.getElementById('verse-text');
+        const imageElement = document.getElementById('verse-image');
+
+        function updateVerse() {
+            const verse = verses[currentVerseIndex];
+            verseElement.innerHTML = `"${verse.text}" (${verse.reference})`;
+            imageElement.src = `./img/${verse.image}`;
+            currentVerseIndex = (currentVerseIndex + 1) % verses.length;
+        }
+
+        // Inicializar el primer versículo
+        updateVerse();
+
+        // Cambiar versículo cada 10 segundos
+        setInterval(updateVerse, 10000);
+
+        // --- 10. FUNCIONALIDAD DE LOS BOTONES DEL QUIZ ---
+        quizYesButton.addEventListener('click', () => {
+            window.location.href = 'Quiz Biblico.html';
+        });
+
+        quizNoButton.addEventListener('click', () => {
+            // No hacer nada o mostrar un mensaje opcional
+            alert('¡Sigue leyendo la Biblia!');
+        });
+
+        // --- 11. EFECTO DE MOVIMIENTO DEL TÍTULO AL HACER SCROLL ---
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const rate = -scrolled * 0.2; // Ajusta la velocidad del movimiento hacia arriba
+            document.querySelector('.header-bar h1').style.transform = `translateY(${rate}px)`;
+        });
+
+    </script>
+</body>
+</html>

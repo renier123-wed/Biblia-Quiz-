@@ -1,2 +1,2 @@
-# Biblia-Quiz-
-Biblia Quiz es la aplicación de trivia definitiva diseñada para cristianos, creyentes y cualquier persona interesada en la sabiduría atemporal de la Santa Biblia. ¡Aprende, desafíate y crece en tu fe de la manera más divertida e interactiva!
+# bible-json
+Biblia Reina Valera 1960, organizada cada capítulo en un archivo de JavaScript que exporta por defecto un arreglo de arreglos, cada arreglo representa un capítulo. 
